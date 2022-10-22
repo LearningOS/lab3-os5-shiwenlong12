@@ -167,6 +167,8 @@ pub fn translated_byte_buffer(token: usize, ptr: *const u8, len: usize) -> Vec<&
     v
 }
 
+//用来从用户地址空间中查找字符串，其原理就是逐字节查页表直到发现一个 \0 为止。
+// 因为内核不知道字符串的长度，且字符串可能是跨物理页的,所以要逐字节查页表
 pub fn translated_str(token: usize, ptr: *const u8) -> String {
     let page_table = PageTable::from_token(token);
     let mut string = String::new();
@@ -185,7 +187,6 @@ pub fn translated_str(token: usize, ptr: *const u8) -> String {
     }
     string
 }
-
 
 pub fn translated_refmut<T>(token: usize, ptr: *mut T) -> &'static mut T {
     //println!("into translated_refmut!");
