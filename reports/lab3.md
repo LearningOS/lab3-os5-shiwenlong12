@@ -1,0 +1,2 @@
+#简述功能
+    引入了进程的概念，不再通过硬编码来执行，而是通过加载elf数据的形式来执行。在task/processor.rs中增加了更新系统调用次数、得到系统调用次数、得到进程运行时间、设置优先级、申请内存、释放内存等函数。在syscall/process.rs中实现了spawn函数，新建子进程，使其执行目标程序。spawn函数基本上就是fork函数和exec函数结合起来的，主要区别就是不想fork函数一样复制父进程的地址空间。在task/manager.rs中实现了stride调度算法，计算方式是 P.stride = BigStride / P.priority,每次执行一个任务需要inner.pass += stride,然后再调度时选择pass最小的执行。因为priority当了分母，所以优先级越大stride就越小，进程就越先被调用。
